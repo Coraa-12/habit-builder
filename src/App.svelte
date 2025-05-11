@@ -1,6 +1,20 @@
 <script>
+  import { onMount } from "svelte";
   let habits = [];
   let newHabit = "";
+  let isInitialized = false;
+
+  onMount(() => {
+    const saved = localStorage.getItem("habits");
+    if (saved) {
+      habits = JSON.parse(saved);
+    }
+    isInitialized = true;
+  });
+
+  $: if (isInitialized) {
+    localStorage.setItem("habits", JSON.stringify(habits));
+  }
 
   function addHabit() {
     if (newHabit.trim()) {
