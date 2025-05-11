@@ -20,16 +20,16 @@
   }
 
   function addHabit() {
-    if (newHabit.trim()) {
-      habits = [...habits, { name: newHabit, done: false }];
-      newHabit = "";
-    }
+  if (newHabit.trim()) {
+    habits = [...habits, { id: Date.now(), name: newHabit, done: false }];
+    newHabit = "";
   }
+}
 
   // ← New: remove by index
-  function removeHabit(idx) {
-    habits = habits.filter((_, i) => i !== idx);
-  }
+  function removeHabit(id) {
+  habits = habits.filter(h => h.id !== id);
+}
 
   // ← New: derive filtered list
   $: filteredHabits = habits.filter((h) => {
@@ -75,7 +75,7 @@
       <input type="checkbox" bind:checked={habit.done} />
       <span class:done={habit.done}>{habit.name}</span>
       <!-- delete button -->
-      <button class="delete" on:click={() => removeHabit(idx)} aria-label="Delete habit">
+      <button class="delete" on:click={() => removeHabit(habit.id)} aria-label="Delete habit">
         ✕
       </button>
     </li>
