@@ -22,6 +22,11 @@
       newHabit = "";
     }
   }
+
+  // ← New: remove by index
+  function removeHabit(idx) {
+    habits = habits.filter((_, i) => i !== idx);
+  }
 </script>
 
 <main>
@@ -41,7 +46,11 @@
     {#each habits as habit, idx}
       <li>
         <input type="checkbox" bind:checked={habit.done} />
-        {habit.name}
+        <span class:done={habit.done}>{habit.name}</span>
+        <!-- delete button -->
+        <button class="delete" on:click={() => removeHabit(idx)} aria-label="Delete habit">
+          ✕
+        </button>
       </li>
     {/each}
   </ul>
@@ -109,6 +118,11 @@
     padding: 0;
     margin: 0;
   }
+  input[type="checkbox"] {
+    accent-color: #2563eb;
+    width: 1rem;
+    height: 1rem;
+  }
   li {
     display: flex;
     align-items: center;
@@ -117,9 +131,21 @@
     font-size: 1rem;
     color: #222;
   }
-  input[type="checkbox"] {
-    accent-color: #2563eb;
-    width: 1rem;
-    height: 1rem;
+  /* Strike-through when done */
+  .done {
+    text-decoration: line-through;
+    opacity: 0.6;
+  }
+  /* Delete button styles */
+  .delete {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .delete:hover {
+    color: #e11d48; /* red-ish */
   }
 </style>
