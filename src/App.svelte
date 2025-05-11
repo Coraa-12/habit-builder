@@ -34,12 +34,78 @@
 </main>
 
 <style>
-  main { max-width: 400px; margin: 2rem auto; padding: 1rem; border-radius: 8px; background: #f8fafc; box-shadow: 0 2px 8px rgba(0,0,0,0.06);}
-  h1 { text-align: center; }
-  form { display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1rem;}
-  input[type="text"] { flex: 1; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 4px;}
-  button { padding: 0.5rem 1rem; border: none; background: #2563eb; color: #fff; border-radius: 4px; cursor: pointer;}
-  button:hover { background: #1d4ed8;}
-  ul { list-style: none; padding: 0;}
-  li { display: flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0;}
+  body {
+    background: #232323;
+  }
+  main {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+    font-family: system-ui, sans-serif;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 1.2rem;
+    font-size: 2rem;
+    background: none;
+    color: #2563eb;
+    font-weight: 800;
+    letter-spacing: .5px;
+  }
+  form {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+  }
+  input[type="text"] {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background: #f3f4f6;
+    color: #222;
+    font-size: 1rem;
+    transition: border 0.2s;
+  }
+  input[type="text"]:focus {
+    border: 1.5px solid #2563eb;
+    outline: none;
+    background: #fff;
+  }
+  button {
+    padding: 0.5rem 1.1rem;
+    border: none;
+    background: #2563eb;
+    color: #fff;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  button:hover, button:focus {
+    background: #1749b1;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+    font-size: 1rem;
+    color: #222;
+  }
+  input[type="checkbox"] {
+    accent-color: #2563eb;
+    width: 1rem;
+    height: 1rem;
+  }
 </style>
