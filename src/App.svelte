@@ -50,11 +50,11 @@
     >All</button>
     <button
       class:selected={filter === "active"}
-      on:click={() => (filter = "active")}
+      on:click={() => filter = "active"}
     >Active</button>
     <button
       class:selected={filter === "completed"}
-      on:click={() => (filter = "completed")}
+      on:click={() => filter = "completed"}
     >Completed</button>
   </div>
 
@@ -176,28 +176,32 @@
     color: #e11d48; /* red-ish */
   }
   .filters {
-  display: flex;
-  justify-content: center;
+  display: inline-flex;
   gap: 0.5rem;
-  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin: 0 auto 1rem;
 }
 
 .filters button {
-  padding: 0.3rem 0.8rem;
-  border: 1px solid #d1d5db;
-  background: #f3f4f6;
-  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 2px solid #2563eb;
+  border-radius: 9999px;
+  color: #2563eb;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
 
 .filters button:hover {
-  border-color: #2563eb;
+  background: rgba(37, 99, 235, 0.1);
 }
 
 .filters button.selected {
   background: #2563eb;
   color: #fff;
-  border-color: #2563eb;
 }
 </style>
