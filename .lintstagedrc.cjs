@@ -3,7 +3,7 @@ module.exports = {
   "src/**/*.{js,svelte}": [
     "npm run lint",
     "npm run format",
-    "vitest related"
+    "npm run test:related"
   ],
   // CSS files only need formatting—and we re-stage them explicitly:
   "src/**/*.css": [
