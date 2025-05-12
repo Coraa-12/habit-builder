@@ -24,9 +24,14 @@
     "vitest": "^1.0.0"
   },
   "lint-staged": {
-    "src/**/*.{js,svelte,css}": [
+    "src/**/*.{js,svelte}": [
       "npm run lint",
-      "npm run format"
+      "npm run format -- --write",
+      "npm test -- --bail"
+    ],
+    "src/**/*.css": [
+      "npm run format -- --write",
+      "git add"
     ]
   }
 }
