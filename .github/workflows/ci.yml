@@ -42,6 +42,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         run: |
+          set -e  # Exit immediately if any command fails
+
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
@@ -58,32 +60,18 @@ jobs:
 
           git reset --hard
 
-          # Verify if 'dist' exists and copy the files
-          if [ -d "dist" ]; then
-            # Copy visible files
-            if ! cp -r dist/* .; then
-              echo "Error: Failed to copy visible files from 'dist' directory."
-              exit 1
-            fi
-
-            # Verify if 'dist' exists and copy the files using rsync
-            if [ -d "dist" ]; then
-              # Copy all files (including hidden ones) with rsync
-              if ! rsync -a dist/ ./; then
-                echo "Error: Failed to copy files from 'dist' directory."
-                exit 1
-              fi
-
-            git add -A
-
-            # Check if there are changes before committing
-            if ! git diff --cached --quiet; then
-              git commit -m "Deploy to GitHub Pages"
-              git push origin gh-pages --force || { echo "Error: Failed to push to gh-pages"; exit 1; }
-            else
-              echo "No changes to commit"
-            fi
-          else
-            echo "Error: 'dist' directory not found. Deployment aborted."
+          # Copy all files (including hidden ones) with rsync
+          if ! rsync -a dist/ ./; then
+            echo "Error: Failed to copy files from 'dist' directory."
             exit 1
+          fi
+
+          git add -A
+
+          # Check if there are changes before committing
+          if ! git diff --cached --quiet; then
+            git commit -m "Deploy to GitHub Pages"
+            git push origin gh-pages --force || { echo "Error: Failed to push to gh-pages"; exit 1; }
+          else
+            echo "No changes to commit"
           fi
