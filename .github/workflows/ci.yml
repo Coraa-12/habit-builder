@@ -35,6 +35,9 @@ jobs:
             exit 1
           fi
 
+      - name: List dist contents
+        run: ls -la dist || echo "dist directory not found"
+
       - name: Deploy to GitHub Pages
         env:
           GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
@@ -45,6 +48,7 @@ jobs:
           # Check if the gh-pages branch exists
           if git rev-parse --verify gh-pages >/dev/null 2>&1; then
             git checkout gh-pages
+            git pull origin gh-pages --rebase || true
           else
             git checkout --orphan gh-pages
           fi
@@ -53,22 +57,27 @@ jobs:
 
           # Verify if 'dist' exists and copy the files
           if [ -d "dist" ]; then
-            cp -r dist/* . || echo "No visible files to copy"
+            # Copy visible files
+            if ! cp -r dist/* .; then
+              echo "Error: Failed to copy visible files from 'dist' directory."
+              exit 1
+            fi
 
             # Copy hidden files (e.g., .htaccess) from the 'dist' directory to ensure all necessary files are deployed
-            find dist -mindepth 1 -maxdepth 1 -name ".*" ! -name "." ! -name ".." -exec cp -r {} . \; || echo "No hidden files to copy"
+            if ! find dist -mindepth 1 -maxdepth 1 -name ".*" ! -name "." ! -name ".." -exec cp -r {} . \;; then
+              echo "Error: Failed to copy hidden files from 'dist' directory."
+              exit 1
+            fi
 
             git add -A
 
             # Check if there are changes before committing
             if ! git diff --cached --quiet; then
               git commit -m "Deploy to GitHub Pages"
+              git push origin gh-pages --force || { echo "Error: Failed to push to gh-pages"; exit 1; }
             else
               echo "No changes to commit"
             fi
-
-            # Push to gh-pages with error handling
-            git push origin gh-pages || { echo "Error: Failed to push to gh-pages"; exit 1; }
           else
             echo "Error: 'dist' directory not found. Deployment aborted."
             exit 1
