@@ -70,7 +70,7 @@
   </form>
 
   <ul>
-  {#each filteredHabits as habit, idx}
+  {#each filteredHabits as habit (habit.id)}
     <li>
       <input type="checkbox" bind:checked={habit.done} />
       <span class:done={habit.done}>{habit.name}</span>
