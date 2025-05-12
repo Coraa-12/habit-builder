@@ -84,9 +84,6 @@
 </main>
 
 <style>
-  body {
-    background: #232323;
-  }
   main {
     max-width: 400px;
     margin: 2rem auto;
