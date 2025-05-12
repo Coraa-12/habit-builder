@@ -36,8 +36,8 @@ jobs:
           git fetch origin gh-pages || echo "No gh-pages branch yet"
           git checkout gh-pages || git checkout --orphan gh-pages
           git reset --hard
-          # Copy built files from dist to root
-          cp -r dist/* .
+          # Copy built files from dist to root (including hidden files)
+          cp -r dist/.* dist/* .
           git add -A
           git commit -m "Deploy to GitHub Pages" || echo "No changes to commit"
-          git push origin gh-pages
+          git push origin gh-pages || { echo "Error: Failed to push to gh-pages"; exit 1; }
