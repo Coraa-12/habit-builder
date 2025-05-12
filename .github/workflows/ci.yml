@@ -49,9 +49,11 @@ jobs:
             cp -r dist/* . || echo "No visible files to copy"
             find dist -mindepth 1 -maxdepth 1 -name ".*" ! -name "." ! -name ".." -exec cp -r {} . \; || echo "No hidden files to copy"
             git add -A
-            git commit -m "Deploy to GitHub Pages" || echo "No changes to commit"
+            # Check if there are changes before committing
+            if ! git diff --cached --quiet; then
+              git commit -m "Deploy to GitHub Pages"
+            else
+              echo "No changes to commit"
+            fi
+            # Push to gh-pages with error handling
             git push origin gh-pages || { echo "Error: Failed to push to gh-pages"; exit 1; }
-          else
-            echo "Error: dist directory does not exist. Build may have failed."
-            exit 1
-          fi
