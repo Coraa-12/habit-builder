@@ -48,7 +48,10 @@ jobs:
           # Check if the gh-pages branch exists
           if git rev-parse --verify gh-pages >/dev/null 2>&1; then
             git checkout gh-pages
-            git pull origin gh-pages --rebase || true
+            if ! git pull origin gh-pages --rebase; then
+              echo "Error: Failed to rebase the gh-pages branch."
+              exit 1
+            fi
           else
             git checkout --orphan gh-pages
           fi
@@ -63,11 +66,13 @@ jobs:
               exit 1
             fi
 
-            # Copy hidden files (e.g., .htaccess) from the 'dist' directory to ensure all necessary files are deployed
-            if ! find dist -mindepth 1 -maxdepth 1 -name ".*" ! -name "." ! -name ".." -exec cp -r {} . \;; then
-              echo "Error: Failed to copy hidden files from 'dist' directory."
-              exit 1
-            fi
+            # Verify if 'dist' exists and copy the files using rsync
+            if [ -d "dist" ]; then
+              # Copy all files (including hidden ones) with rsync
+              if ! rsync -a dist/ ./; then
+                echo "Error: Failed to copy files from 'dist' directory."
+                exit 1
+              fi
 
             git add -A
 
