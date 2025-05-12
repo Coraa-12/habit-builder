@@ -27,8 +27,51 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Validate Build Output
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "Error: Build did not produce the dist directory."
+            exit 1
+          fi
+
+      - name: List dist contents
+        run: ls -la dist || echo "dist directory not found"
+
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        run: |
+          set -e  # Exit immediately if any command fails
+
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+          # Check if the gh-pages branch exists
+          if git rev-parse --verify gh-pages >/dev/null 2>&1; then
+            git checkout gh-pages
+            if ! git pull origin gh-pages --rebase; then
+              echo "Error: Failed to rebase the gh-pages branch."
+              exit 1
+            fi
+          else
+            git checkout --orphan gh-pages
+          fi
+
+          git reset --hard
+
+          # Copy all files (including hidden ones) with rsync
+          if ! rsync -a dist/ ./; then
+            echo "Error: Failed to copy files from 'dist' directory."
+            exit 1
+          fi
+
+          git add -A
+
+          # Check if there are changes before committing
+          if ! git diff --cached --quiet; then
+            git commit -m "Deploy to GitHub Pages"
+            git push origin gh-pages --force || { echo "Error: Failed to push to gh-pages"; exit 1; }
+          else
+            echo "No changes to commit"
+          fi
