@@ -47,7 +47,7 @@ jobs:
           # Verify if 'dist' exists and copy the files
           if [ -d "dist" ]; then
             cp -r dist/* . || echo "No visible files to copy"
-            cp -r dist/.* . 2>/dev/null || echo "No hidden files to copy"
+            find dist -mindepth 1 -maxdepth 1 -name ".*" ! -name "." ! -name ".." -exec cp -r {} . \; || echo "No hidden files to copy"
             git add -A
             git commit -m "Deploy to GitHub Pages" || echo "No changes to commit"
             git push origin gh-pages || { echo "Error: Failed to push to gh-pages"; exit 1; }
