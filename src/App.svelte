@@ -4,7 +4,6 @@
   let newHabit = "";
   let isInitialized = false;
 
-  // ← New: filter state
   let filter = "all";
 
   onMount(() => {
@@ -20,18 +19,16 @@
   }
 
   function addHabit() {
-  if (newHabit.trim()) {
-    habits = [...habits, { id: Date.now(), name: newHabit, done: false }];
-    newHabit = "";
+    if (newHabit.trim()) {
+      habits = [...habits, { id: Date.now(), name: newHabit, done: false }];
+      newHabit = "";
+    }
   }
-}
 
-  // ← New: remove by index
   function removeHabit(id) {
-  habits = habits.filter(h => h.id !== id);
-}
+    habits = habits.filter(h => h.id !== id);
+  }
 
-  // ← New: derive filtered list
   $: filteredHabits = habits.filter((h) => {
     if (filter === "active") return !h.done;
     if (filter === "completed") return h.done;
@@ -42,7 +39,6 @@
 <main>
   <h1>Habit Builder</h1>
 
-  <!-- ← New: filter buttons -->
   <div class="filters">
     <button
       class:selected={filter === "all"}
@@ -70,17 +66,16 @@
   </form>
 
   <ul>
-  {#each filteredHabits as habit (habit.id)}
-    <li>
-      <input type="checkbox" bind:checked={habit.done} />
-      <span class:done={habit.done}>{habit.name}</span>
-      <!-- delete button -->
-      <button class="delete" on:click={() => removeHabit(habit.id)} aria-label="Delete habit">
-        ✕
-      </button>
-    </li>
-  {/each}
-</ul>
+    {#each filteredHabits as habit (habit.id)}
+      <li>
+        <input type="checkbox" bind:checked={habit.done} />
+        <span class:done={habit.done}>{habit.name}</span>
+        <button class="delete" on:click={() => removeHabit(habit.id)} aria-label="Delete habit">
+          ✕
+        </button>
+      </li>
+    {/each}
+  </ul>
 </main>
 
 <style>
@@ -155,12 +150,10 @@
     font-size: 1rem;
     color: #222;
   }
-  /* Strike-through when done */
   .done {
     text-decoration: line-through;
     opacity: 0.6;
   }
-  /* Delete button styles */
   .delete {
     margin-left: auto;
     background: transparent;
@@ -170,35 +163,32 @@
     transition: color 0.2s;
   }
   .delete:hover {
-    color: #e11d48; /* red-ish */
+    color: #e11d48;
   }
   .filters {
-  display: inline-flex;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  margin: 0 auto 1rem;
-}
-
-.filters button {
-  padding: 0.5rem 1rem;
-  background: transparent;
-  border: 2px solid #2563eb;
-  border-radius: 9999px;
-  color: #2563eb;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
-
-.filters button:hover {
-  background: rgba(37, 99, 235, 0.1);
-}
-
-.filters button.selected {
-  background: #2563eb;
-  color: #fff;
-}
+    display: inline-flex;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin: 0 auto 1rem;
+  }
+  .filters button {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 2px solid #2563eb;
+    border-radius: 9999px;
+    color: #2563eb;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .filters button:hover {
+    background: rgba(37, 99, 235, 0.1);
+  }
+  .filters button.selected {
+    background: #2563eb;
+    color: #fff;
+  }
 </style>
