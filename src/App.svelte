@@ -3,20 +3,39 @@
   let habits = [];
   let newHabit = "";
   let isInitialized = false;
+  let darkMode = false; // Dark mode state
 
   // ← New: filter state
   let filter = "all";
 
   onMount(() => {
-    const saved = localStorage.getItem("habits");
-    if (saved) {
-      habits = JSON.parse(saved);
+    const savedHabits = localStorage.getItem("habits");
+    if (savedHabits) {
+      habits = JSON.parse(savedHabits);
+    }
+    const savedDarkMode = localStorage.getItem("darkMode");
+    if (savedDarkMode) {
+      darkMode = JSON.parse(savedDarkMode);
     }
     isInitialized = true;
   });
 
   $: if (isInitialized) {
     localStorage.setItem("habits", JSON.stringify(habits));
+    localStorage.setItem("darkMode", JSON.stringify(darkMode));
+  }
+
+  // Update body class when darkMode changes
+  $: if (isInitialized && typeof document !== 'undefined') {
+    if (darkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }
+
+  function toggleDarkMode() {
+    darkMode = !darkMode;
   }
 
   function addHabit() {
@@ -39,7 +58,7 @@
   });
 </script>
 
-<main>
+<main class:dark={darkMode}>
   <h1>Habit Builder</h1>
 
   <!-- ← New: filter buttons -->
@@ -56,6 +75,9 @@
       class:selected={filter === "completed"}
       on:click={() => filter = "completed"}
     >Completed</button>
+    <button on:click={toggleDarkMode}>
+      {darkMode ? "Light" : "Dark"} Mode
+    </button>
   </div>
 
   <form on:submit|preventDefault={addHabit}>
@@ -200,5 +222,47 @@
 .filters button.selected {
   background: #2563eb;
   color: #fff;
+}
+
+/* Dark Mode Styles */
+main.dark {
+  background: #1f2937; /* dark gray */
+  color: #f3f4f6; /* light gray */
+}
+main.dark h1 {
+  color: #60a5fa; /* lighter blue */
+}
+main.dark input[type="text"] {
+  background: #374151; /* darker gray */
+  color: #f3f4f6;
+  border-color: #4b5563; /* medium gray */
+}
+main.dark input[type="text"]:focus {
+  border-color: #60a5fa;
+  background: #4b5563;
+}
+main.dark button {
+  background: #60a5fa;
+  color: #1f2937;
+}
+main.dark button:hover, main.dark button:focus {
+  background: #3b82f6; /* slightly darker blue */
+}
+main.dark .filters button {
+  border-color: #60a5fa;
+  color: #60a5fa;
+}
+main.dark .filters button:hover {
+  background: rgba(96, 165, 250, 0.1);
+}
+main.dark .filters button.selected {
+  background: #60a5fa;
+  color: #1f2937;
+}
+main.dark li {
+  color: #f3f4f6;
+}
+main.dark .delete:hover {
+  color: #f87171; /* lighter red */
 }
 </style>
